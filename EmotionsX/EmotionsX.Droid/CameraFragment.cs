@@ -18,6 +18,8 @@ using Java.Nio;
 using Android.Hardware.Camera2.Params;
 using Java.Lang;
 using EmotionsX.Services;
+//using System.IO;
+
 
 namespace EmotionsX.Droid
 {
@@ -176,6 +178,7 @@ namespace EmotionsX.Droid
                     if (activity != null)
                     {
                         Toast.MakeText(activity, "Saved: " + File.ToString(), ToastLength.Short).Show();
+
                         Fragment.StartPreview();
                     }
                 }
@@ -353,10 +356,10 @@ namespace EmotionsX.Droid
         {
             mTextureView = (AutoFitTextureView)view.FindViewById(Resource.Id.texture);
             mTextureView.SurfaceTextureListener = mSurfaceTextureListener;
-            
+
             View.FindViewById(Resource.Id.camerafragmentbutton).SetOnClickListener(this);
             //View.FindViewById(Resource.Id.mybutton2).SetOnClickListener(this);
-            
+
         }
 
         public override void OnResume()
@@ -475,30 +478,38 @@ namespace EmotionsX.Droid
 
                 //Calling my API
                 //Toast.MakeText(this.Context, "Uploading...", ToastLength.Short).Show();
-                try
-                {
-                    Toast.MakeText(this.Context, "Uploading...", ToastLength.Short).Show();
-                    var jpegdirectory = new File(activity.GetExternalFilesDir(null), "pic.jpg").ToString();
-                    Bitmap bmp = BitmapFactory.DecodeFile(jpegdirectory);
-                    var service = new UploadService();
-                    await service.UploadBitmap(bmp);
+
+                //Image skata = reader.AcquireLatestImage();
+                //ByteBuffer buffer = skata.getPlanes()[0].getBuffer();
+                //try
+                //{
+                //    Toast.MakeText(this.Context, "Uploading...", ToastLength.Short).Show();
 
 
-                    //FragmentTransaction fragtrans = this.FragmentManager.BeginTransaction();
-                    //EmotionsFragment newEmotionfrag = new EmotionsFragment();
+                //    System.IO.MemoryStream ms = new System.IO.MemoryStream(bytes);
 
-                    //fragtrans.Replace(Resource.Id.fearSection, newEmotionfrag);
-                    //fragtrans.AddToBackStack(null);
-                    //fragtrans.Commit();
+                //    //System.Drawing.Bitmap bmp = new Bitmap(ms);
 
-                }
-                catch (System.Exception e)
-                {
-                    Toast.MakeText(this.Context, "Uploading Failed!", ToastLength.Short).Show();
-                    throw e;
-                }
-               
+                //    //var jpegdirectory = new File(activity.GetExternalFilesDir(null), "pic.jpg").ToString();
 
+
+                //    var service = new UploadService();
+                //    await service.UploadBitmap(ms);
+
+
+                //    //FragmentTransaction fragtrans = this.FragmentManager.BeginTransaction();
+                //    //EmotionsFragment newEmotionfrag = new EmotionsFragment();
+
+                //    //fragtrans.Replace(Resource.Id.fearSection, newEmotionfrag);
+                //    //fragtrans.AddToBackStack(null);
+                //    //fragtrans.Commit();
+
+                //}
+                //catch (System.Exception e)
+                //{
+                //    Toast.MakeText(this.Context, "Uploading Failed!", ToastLength.Short).Show();
+                //    throw e;
+                //}
 
 
 
