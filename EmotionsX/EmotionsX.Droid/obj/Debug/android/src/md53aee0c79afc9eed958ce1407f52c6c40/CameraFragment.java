@@ -4,7 +4,8 @@ package md53aee0c79afc9eed958ce1407f52c6c40;
 public class CameraFragment
 	extends android.app.Fragment
 	implements
-		mono.android.IGCUserPeer
+		mono.android.IGCUserPeer,
+		android.view.View.OnClickListener
 {
 	static final String __md_methods;
 	static {
@@ -14,6 +15,7 @@ public class CameraFragment
 			"n_onViewCreated:(Landroid/view/View;Landroid/os/Bundle;)V:GetOnViewCreated_Landroid_view_View_Landroid_os_Bundle_Handler\n" +
 			"n_onResume:()V:GetOnResumeHandler\n" +
 			"n_onPause:()V:GetOnPauseHandler\n" +
+			"n_onClick:(Landroid/view/View;)V:GetOnClick_Landroid_view_View_Handler:Android.Views.View/IOnClickListenerInvoker, Mono.Android, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\n" +
 			"";
 		mono.android.Runtime.register ("EmotionsX.Droid.CameraFragment, EmotionsX, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", CameraFragment.class, __md_methods);
 	}
@@ -65,6 +67,14 @@ public class CameraFragment
 	}
 
 	private native void n_onPause ();
+
+
+	public void onClick (android.view.View p0)
+	{
+		n_onClick (p0);
+	}
+
+	private native void n_onClick (android.view.View p0);
 
 	java.util.ArrayList refList;
 	public void monodroidAddReference (java.lang.Object obj)

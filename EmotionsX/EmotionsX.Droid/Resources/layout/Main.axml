@@ -4,13 +4,15 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
     <FrameLayout
-        android:layout_width="120dp"
-        android:layout_height="150dp"
-        android:id="@+id/fragmentcontainer"
-        android:layout_gravity="center" />
+        class="EmotionsX.Droid.CameraFragment"
+        android:layout_width="match_parent"
+        android:layout_height="300px"
+        android:id="@+id/fragmentcontainer" />
     <FrameLayout
-        android:layout_width="120dp"
-        android:layout_height="150dp"
+        class="EmotionsX.Droid.EmotionsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:id="@+id/fragmentcontainer2"
-        android:layout_gravity="center" />
+        android:fadeScrollbars="false"
+        android:scrollbars="vertical" />
 </LinearLayout>

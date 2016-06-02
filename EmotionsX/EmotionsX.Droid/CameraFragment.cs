@@ -17,10 +17,11 @@ using Android.Media;
 using Java.Nio;
 using Android.Hardware.Camera2.Params;
 using Java.Lang;
+using EmotionsX.Services;
 
 namespace EmotionsX.Droid
 {
-    public class CameraFragment : Fragment
+    public class CameraFragment : Fragment, View.IOnClickListener
     {
         private static readonly SparseIntArray ORIENTATIONS = new SparseIntArray();
         // An AutoFitTextureView for camera preview
@@ -352,8 +353,9 @@ namespace EmotionsX.Droid
         {
             mTextureView = (AutoFitTextureView)view.FindViewById(Resource.Id.texture);
             mTextureView.SurfaceTextureListener = mSurfaceTextureListener;
-          //View.FindViewById(Resource.Id.mybutton).SetOnClickListener(this);
-         //View.FindViewById(Resource.Id.mybutton2).SetOnClickListener(this);
+            
+            View.FindViewById(Resource.Id.camerafragmentbutton).SetOnClickListener(this);
+            //View.FindViewById(Resource.Id.mybutton2).SetOnClickListener(this);
             
         }
 
@@ -417,7 +419,7 @@ namespace EmotionsX.Droid
             }
         }
 
-        private void TakePicture()
+        private async void TakePicture()
         {
             try
             {
@@ -470,6 +472,36 @@ namespace EmotionsX.Droid
                 Handler backgroundHandler = new Handler(thread.Looper);
                 reader.SetOnImageAvailableListener(readerListener, backgroundHandler);
 
+
+                //Calling my API
+                //Toast.MakeText(this.Context, "Uploading...", ToastLength.Short).Show();
+                try
+                {
+                    Toast.MakeText(this.Context, "Uploading...", ToastLength.Short).Show();
+                    var jpegdirectory = new File(activity.GetExternalFilesDir(null), "pic.jpg").ToString();
+                    Bitmap bmp = BitmapFactory.DecodeFile(jpegdirectory);
+                    var service = new UploadService();
+                    await service.UploadBitmap(bmp);
+
+
+                    //FragmentTransaction fragtrans = this.FragmentManager.BeginTransaction();
+                    //EmotionsFragment newEmotionfrag = new EmotionsFragment();
+
+                    //fragtrans.Replace(Resource.Id.fearSection, newEmotionfrag);
+                    //fragtrans.AddToBackStack(null);
+                    //fragtrans.Commit();
+
+                }
+                catch (System.Exception e)
+                {
+                    Toast.MakeText(this.Context, "Uploading Failed!", ToastLength.Short).Show();
+                    throw e;
+                }
+               
+
+
+
+
                 //This listener is called when the capture is completed
                 // Note that the JPEG data is not available in this listener, but in the ImageAvailableListener we created above
                 // Right click on CameraCaptureListener in your IDE and go to its definition
@@ -477,7 +509,8 @@ namespace EmotionsX.Droid
 
                 mCameraDevice.CreateCaptureSession(outputSurfaces, new CameraCaptureStateListener()
                 {
-                    OnConfiguredAction = (CameraCaptureSession session) => {
+                    OnConfiguredAction = (CameraCaptureSession session) =>
+                    {
                         try
                         {
                             session.Capture(captureBuilder.Build(), captureListener, backgroundHandler);
@@ -495,28 +528,30 @@ namespace EmotionsX.Droid
             }
         }
 
-        //public void OnClick(View v)
-        //{
-        //    switch (v.Id)
-        //    {
-        //        case Resource.Id.mybutton:
-        //            TakePicture();
-        //            break;
-        //        case Resource.Id.mybutton2:
-        //            EventHandler<DialogClickEventArgs> nullHandler = null;
-        //            Activity activity = Activity;
-        //            if (activity != null)
-        //            {
-        //                new AlertDialog.Builder(activity)
-        //                    .SetMessage("This sample demonstrates the basic use of the Camera2 API. ...")
-        //                    .SetPositiveButton(Android.Resource.String.Ok, nullHandler)
-        //                    .Show();
+        public void OnClick(View v)
+        {
+            switch (v.Id)
+            {
+                case Resource.Id.camerafragmentbutton:
+                    //uploading to my api
+                    TakePicture();
+                    break;
+                case Resource.Id.infobutton:
+                    //print a message and stoping the service
+                    EventHandler<DialogClickEventArgs> nullHandler = null;
+                    Activity activity = Activity;
+                    if (activity != null)
+                    {
+                        new AlertDialog.Builder(activity)
+                            .SetMessage("Terminating Service")
+                            .SetPositiveButton(Android.Resource.String.Ok, nullHandler)
+                            .Show();
 
-        //            }
+                    }
 
-        //            break;
-        //    }
-        //}
+                    break;
+            }
+        }
 
         public class ErrorDialog : DialogFragment
         {

@@ -79,6 +79,7 @@ public class MonoPackageManager {
 
 class MonoPackageManager_Resources {
 	public static final String[] Assemblies = new String[]{
+		"EmotionsX.Droid.dll",
 		"EmotionsX.dll",
 		"System.Collections.Concurrent.dll",
 		"System.Collections.dll",

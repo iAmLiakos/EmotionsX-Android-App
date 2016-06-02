@@ -26,10 +26,9 @@ namespace EmotionsX.Droid
 			// Set our view from the "main" layout resource
 			SetContentView (Resource.Layout.Main);
 
-          //if(bundle == null)
-            //{
-                FragmentManager.BeginTransaction().Replace(Resource.Id.fragmentcontainer, CameraFragment.NewInstance()).Commit();
-            //}
+          
+            FragmentManager.BeginTransaction().Replace(Resource.Id.fragmentcontainer, CameraFragment.NewInstance()).Commit();
+            
             FragmentManager.BeginTransaction().Replace(Resource.Id.fragmentcontainer2, EmotionsFragment.NewInstance()).Commit();
         }
 	}
