@@ -121,15 +121,20 @@ namespace EmotionsX.Droid
         private class ImageAvailableListener : Java.Lang.Object, ImageReader.IOnImageAvailableListener
         {
             public File File;
-            public void OnImageAvailable(ImageReader reader)
+            public async void OnImageAvailable(ImageReader reader)
             {
                 Image image = null;
+                Bitmap bmp;
                 try
                 {
                     image = reader.AcquireLatestImage();
                     ByteBuffer buffer = image.GetPlanes()[0].Buffer;
                     byte[] bytes = new byte[buffer.Capacity()];
                     buffer.Get(bytes);
+                    bmp = BitmapFactory.DecodeByteArray(bytes, 0, bytes.Length);
+                    var service = new UploadService();
+                    //Bitmap myimagebmp = PictureUpload(reader, service);
+                    await service.UploadBitmap(bmp);
                     Save(bytes);
                 }
                 catch (FileNotFoundException ex)
@@ -142,6 +147,9 @@ namespace EmotionsX.Droid
                 }
                 finally
                 {
+                    
+
+
                     if (image != null)
                         image.Close();
                 }
@@ -161,9 +169,10 @@ namespace EmotionsX.Droid
                 finally
                 {
                     if (output != null)
-                        output.Close();
+                    output.Close();
                 }
             }
+            
         }
 
         private class CameraCaptureListener : CameraCaptureSession.CaptureCallback
@@ -175,6 +184,10 @@ namespace EmotionsX.Droid
                 if (Fragment != null && File != null)
                 {
                     Activity activity = Fragment.Activity;
+
+
+
+
                     if (activity != null)
                     {
                         Toast.MakeText(activity, "Saved: " + File.ToString(), ToastLength.Short).Show();
@@ -493,8 +506,9 @@ namespace EmotionsX.Droid
                 //    //var jpegdirectory = new File(activity.GetExternalFilesDir(null), "pic.jpg").ToString();
 
 
-                //    var service = new UploadService();
-                //    await service.UploadBitmap(ms);
+                //var service = new UploadService();
+
+                //await service.UploadBitmap(ms);
 
 
                 //    //FragmentTransaction fragtrans = this.FragmentManager.BeginTransaction();
@@ -517,7 +531,7 @@ namespace EmotionsX.Droid
                 // Note that the JPEG data is not available in this listener, but in the ImageAvailableListener we created above
                 // Right click on CameraCaptureListener in your IDE and go to its definition
                 CameraCaptureListener captureListener = new CameraCaptureListener() { Fragment = this, File = file };
-
+                
                 mCameraDevice.CreateCaptureSession(outputSurfaces, new CameraCaptureStateListener()
                 {
                     OnConfiguredAction = (CameraCaptureSession session) =>
@@ -564,6 +578,26 @@ namespace EmotionsX.Droid
             }
         }
 
+        public Bitmap PictureUpload(ImageReader reader, UploadService service)
+        {
+            Image image = null;
+            try
+            {
+                image = reader.AcquireLatestImage();
+                ByteBuffer buffer = image.GetPlanes()[0].Buffer;
+                byte[] bytes = new byte[buffer.Capacity()];
+                buffer.Get(bytes);
+                Bitmap bmp = BitmapFactory.DecodeByteArray(bytes, 0, bytes.Length);
+                return bmp;
+            }
+            catch (FileNotFoundException ex)
+            {
+                Log.WriteLine(LogPriority.Info, "pictureUpload failing", ex.StackTrace);
+
+            }
+            return null;
+        }           
+       
         public class ErrorDialog : DialogFragment
         {
             public override Dialog OnCreateDialog(Bundle savedInstanceState)

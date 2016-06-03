@@ -15,8 +15,8 @@ namespace EmotionsX.Services
 {
     public class UploadService
     {
-        private const string UPLOAD_URL = "http://192.168.0.119:81/api/upload";
-        //private const string UPLOAD_URL = "http://10.0.2.2:62363/api/upload";
+        //private const string UPLOAD_URL = "http://192.168.0.119:81/api/upload";
+        private const string UPLOAD_URL = "http://10.0.2.2:62363/api/upload";
 
         public async Task<string> UploadBitmap(Bitmap bitmap)
         {
@@ -44,9 +44,10 @@ namespace EmotionsX.Services
                 HttpClient httpClient = new HttpClient();
 
                 HttpResponseMessage response = await httpClient.PostAsync(UPLOAD_URL, multipartContent);
+                Toast.MakeText(Application.Context, "Success", ToastLength.Long).Show();
                 if (response.IsSuccessStatusCode)
                 {
-                    Toast.MakeText(Application.Context, "Success", ToastLength.Long).Show();
+                    //Toast.MakeText(Application.Context, "Success", ToastLength.Long).Show();
                     string content = await response.Content.ReadAsStringAsync();
                     return content;
                 }
