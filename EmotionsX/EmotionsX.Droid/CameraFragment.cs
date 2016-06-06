@@ -18,6 +18,7 @@ using Java.Nio;
 using Android.Hardware.Camera2.Params;
 using Java.Lang;
 using EmotionsX.Services;
+using System.Threading.Tasks;
 //using System.IO;
 
 
@@ -121,20 +122,20 @@ namespace EmotionsX.Droid
         private class ImageAvailableListener : Java.Lang.Object, ImageReader.IOnImageAvailableListener
         {
             public File File;
-            public async void OnImageAvailable(ImageReader reader)
+            public void OnImageAvailable(ImageReader reader)
             {
                 Image image = null;
-                Bitmap bmp;
+                //Bitmap bmp;
                 try
                 {
                     image = reader.AcquireLatestImage();
                     ByteBuffer buffer = image.GetPlanes()[0].Buffer;
                     byte[] bytes = new byte[buffer.Capacity()];
                     buffer.Get(bytes);
-                    bmp = BitmapFactory.DecodeByteArray(bytes, 0, bytes.Length);
-                    var service = new UploadService();
+                    //bmp = BitmapFactory.DecodeByteArray(bytes, 0, bytes.Length);
+                    //var service = new UploadService();
                     //Bitmap myimagebmp = PictureUpload(reader, service);
-                    await service.UploadBitmap(bmp);
+                    //await service.UploadBitmap(bmp);
                     Save(bytes);
                 }
                 catch (FileNotFoundException ex)
@@ -179,19 +180,17 @@ namespace EmotionsX.Droid
         {
             public CameraFragment Fragment;
             public File File;
-            public override void OnCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result)
+            public override async void OnCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result)
             {
+                
                 if (Fragment != null && File != null)
                 {
                     Activity activity = Fragment.Activity;
 
-
-
-
                     if (activity != null)
                     {
                         Toast.MakeText(activity, "Saved: " + File.ToString(), ToastLength.Short).Show();
-
+                       
                         Fragment.StartPreview();
                     }
                 }
@@ -371,7 +370,7 @@ namespace EmotionsX.Droid
             mTextureView.SurfaceTextureListener = mSurfaceTextureListener;
 
             View.FindViewById(Resource.Id.camerafragmentbutton).SetOnClickListener(this);
-            //View.FindViewById(Resource.Id.mybutton2).SetOnClickListener(this);
+            View.FindViewById(Resource.Id.uploadbutton).SetOnClickListener(this);
 
         }
 
@@ -435,7 +434,7 @@ namespace EmotionsX.Droid
             }
         }
 
-        private async void TakePicture()
+        private void TakePicture()
         {
             try
             {
@@ -553,7 +552,7 @@ namespace EmotionsX.Droid
             }
         }
 
-        public void OnClick(View v)
+        public async void OnClick(View v)
         {
             switch (v.Id)
             {
@@ -561,43 +560,24 @@ namespace EmotionsX.Droid
                     //uploading to my api
                     TakePicture();
                     break;
-                case Resource.Id.infobutton:
+                case Resource.Id.uploadbutton:
+                    await UploadPicHelper();
                     //print a message and stoping the service
-                    EventHandler<DialogClickEventArgs> nullHandler = null;
-                    Activity activity = Activity;
-                    if (activity != null)
-                    {
-                        new AlertDialog.Builder(activity)
-                            .SetMessage("Terminating Service")
-                            .SetPositiveButton(Android.Resource.String.Ok, nullHandler)
-                            .Show();
+                    //EventHandler<DialogClickEventArgs> nullHandler = null;
+                    //Activity activity = Activity;
+                    //if (activity != null)
+                    //{
+                    //    new AlertDialog.Builder(activity)
+                    //        .SetMessage("Terminating Service")
+                    //        .SetPositiveButton(Android.Resource.String.Ok, nullHandler)
+                    //        .Show();
 
-                    }
+                    //}
 
                     break;
             }
         }
 
-        public Bitmap PictureUpload(ImageReader reader, UploadService service)
-        {
-            Image image = null;
-            try
-            {
-                image = reader.AcquireLatestImage();
-                ByteBuffer buffer = image.GetPlanes()[0].Buffer;
-                byte[] bytes = new byte[buffer.Capacity()];
-                buffer.Get(bytes);
-                Bitmap bmp = BitmapFactory.DecodeByteArray(bytes, 0, bytes.Length);
-                return bmp;
-            }
-            catch (FileNotFoundException ex)
-            {
-                Log.WriteLine(LogPriority.Info, "pictureUpload failing", ex.StackTrace);
-
-            }
-            return null;
-        }           
-       
         public class ErrorDialog : DialogFragment
         {
             public override Dialog OnCreateDialog(Bundle savedInstanceState)
@@ -620,6 +600,28 @@ namespace EmotionsX.Droid
             public void OnClick(IDialogInterface dialogInterface, int i)
             {
                 er.Activity.Finish();
+            }
+        }
+
+        public async Task<string> UploadPicHelper()
+        {
+            UploadService service = new UploadService();
+            var sdCardPath = Android.OS.Environment.ExternalStorageDirectory.Path;
+            var imageSdPath = Activity.GetExternalFilesDir(null).ToString();
+            var imageFilePath = System.IO.Path.Combine(imageSdPath, "pic.jpg");
+
+            if (System.IO.File.Exists(imageFilePath))
+            {
+                var imageFile = new Java.IO.File(imageFilePath);
+                Bitmap bitmap = BitmapFactory.DecodeFile(imageFile.AbsolutePath);
+                var result = await service.UploadBitmap(bitmap);
+                Toast.MakeText(this.Context, "Done!!", ToastLength.Short).Show();
+                return result;
+            }
+            else
+            {
+                Toast.MakeText(this.Context, "No image found...", ToastLength.Short).Show();
+                return null;
             }
         }
     }

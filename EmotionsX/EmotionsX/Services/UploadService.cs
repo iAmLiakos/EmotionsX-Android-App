@@ -15,12 +15,12 @@ namespace EmotionsX.Services
 {
     public class UploadService
     {
-        //private const string UPLOAD_URL = "http://192.168.0.119:81/api/upload";
-        private const string UPLOAD_URL = "http://10.0.2.2:62363/api/upload";
-
+        private const string UPLOAD_URL = "http://192.168.0.119:3000/api/upload";
+        //private const string UPLOAD_URL = "http://10.0.2.2:62363/api/upload";
+        
         public async Task<string> UploadBitmap(Bitmap bitmap)
         {
-            string _message = "Failed retreiving data..";
+            string _message = "Failed retreiving data..";          
 
             try
             {
@@ -42,16 +42,24 @@ namespace EmotionsX.Services
 
                 //Toast.MakeText(Application.Context, "Sending image...", ToastLength.Long).Show();
                 HttpClient httpClient = new HttpClient();
-
-                HttpResponseMessage response = await httpClient.PostAsync(UPLOAD_URL, multipartContent);
-                Toast.MakeText(Application.Context, "Success", ToastLength.Long).Show();
-                if (response.IsSuccessStatusCode)
+                try
                 {
+                    
+                    HttpResponseMessage response = await httpClient.PostAsync(UPLOAD_URL, multipartContent);
                     //Toast.MakeText(Application.Context, "Success", ToastLength.Long).Show();
-                    string content = await response.Content.ReadAsStringAsync();
-                    return content;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        
+                        string content = await response.Content.ReadAsStringAsync();
+                        Toast.MakeText(Application.Context, "Success", ToastLength.Long).Show();
+                        return content;
+                    }
                 }
+                catch (Exception e)
+                {
 
+                    throw e;
+                }
 
                 Toast.MakeText(Application.Context, "Failed damn...", ToastLength.Long).Show();
                 return _message;
