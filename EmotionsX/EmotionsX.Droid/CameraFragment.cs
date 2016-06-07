@@ -612,9 +612,9 @@ namespace EmotionsX.Droid
 
             if (System.IO.File.Exists(imageFilePath))
             {
-                var imageFile = new Java.IO.File(imageFilePath);
+                var imageFile = new Java.IO.File(imageFilePath);               
                 Bitmap bitmap = BitmapFactory.DecodeFile(imageFile.AbsolutePath);
-                var result = await service.UploadBitmap(bitmap);
+                var result = await service.UploadPic(bitmap);
                 Toast.MakeText(this.Context, "Done!!", ToastLength.Short).Show();
                 return result;
             }
