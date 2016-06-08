@@ -4,6 +4,7 @@ using Android.Graphics.Drawables;
 using Android.Util;
 using Android.Widget;
 using EmotionsX.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,8 +12,10 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace EmotionsX.Services
 {
@@ -103,8 +106,27 @@ namespace EmotionsX.Services
 
                         if (response.IsSuccessStatusCode)
                         {
+                            //writing to file
+                            var sdCardPath = Android.OS.Environment.ExternalStorageDirectory.Path;
+                            var filePath = System.IO.Path.Combine(sdCardPath, "results.txt");
+                            using (Stream s = GenerateStreamFromString(response2))
+                            {
+                                System.IO.StreamWriter write = new System.IO.StreamWriter(s);
+                                
+                            }
+                            
+                            
                             //dimiourgia tou model mou
+                            Emotion emotion = new Emotion();                           
+                            //MemoryStream stream1 = new MemoryStream();
+                            //stream1.Position = 0;
+                            //DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(Emotion));
 
+                            //var emotionobject = JsonConvert.DeserializeObject<Emotion>(response2);
+                            //Debug.WriteLine(emotion.scores.happiness);
+                            //ser.WriteObject(stream1, emotion);
+                            //Emotion emo = (Emotion)ser.ReadObject(stream1); 
+                            //Debug.WriteLine(emo.scores.anger);
                             Debug.WriteLine("Image was succesfully uploaded to server!!");
                             //Emotion = await ResponseMessageToEmotionModel(response).ConfigureAwait(false);
                         }
@@ -123,6 +145,16 @@ namespace EmotionsX.Services
                 }
             }
 
+        }
+
+        public Stream GenerateStreamFromString(string s)
+        {
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
         }
 
         private Task ResponseMessageToEmotionModel(HttpResponseMessage response)

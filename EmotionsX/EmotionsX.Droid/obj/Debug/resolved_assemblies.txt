@@ -4,6 +4,7 @@ C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\Emotion
 C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX.Droid\obj\Debug\assemblies\mscorlib.dll
 C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX.Droid\obj\Debug\assemblies\System.Core.dll
 C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX.Droid\obj\Debug\assemblies\System.dll
+C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX.Droid\obj\Debug\assemblies\System.Json.dll
 C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX.Droid\obj\Debug\assemblies\System.Xml.dll
 C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX.Droid\obj\Debug\assemblies\System.Collections.Concurrent.dll
 C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX.Droid\obj\Debug\assemblies\System.Collections.dll
