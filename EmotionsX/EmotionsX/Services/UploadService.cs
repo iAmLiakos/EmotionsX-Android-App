@@ -5,6 +5,7 @@ using Android.Util;
 using Android.Widget;
 using EmotionsX.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,7 +22,7 @@ namespace EmotionsX.Services
 {
     public class UploadService
     {
-        private const string UPLOAD_URL = "http://192.168.0.119:3000/api/upload";
+        private const string UPLOAD_URL = "http://192.168.0.125:3000/api/upload";
         //private const string UPLOAD_URL = "http://10.0.2.2:62363/api/upload";
 
         public async Task<string> UploadBitmap(Bitmap bitmap)
@@ -86,7 +87,7 @@ namespace EmotionsX.Services
         {
             using (var httpClient = new HttpClient())
             {
-                httpClient.Timeout = TimeSpan.FromMinutes(1);
+                httpClient.Timeout = TimeSpan.FromMinutes(5);
                 using (var formData = new MultipartFormDataContent())
                 {
                     //pernaw to bitmap ston server gia na apothikeutei ws jpeg
@@ -96,41 +97,65 @@ namespace EmotionsX.Services
                     bitmapData = stream.ToArray();
                     var httpContent = new ByteArrayContent(bitmapData);
                     formData.Add(httpContent, "file", "picture.jpg");
-
+                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    //HttpContent content = new StringContent(json);
                     try
                     {
                         //stelnw sto webapi mou gia na parw apotelesmata
-                        var response = await httpClient.PostAsync(UPLOAD_URL, formData);
-                        var response2 = response.ToString();
-
+                        //var response = await httpClient.PostAsync(UPLOAD_URL, formData);                       
+                        //response.Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                        Task<HttpResponseMessage> getResponse = httpClient.PostAsync(UPLOAD_URL, formData);
+                        HttpResponseMessage response = await getResponse;
+                        var responseStr = await response.Content.ReadAsStringAsync();
+                        
+                        
+                        //var response2 = response.Content.ToString();
+                        
 
                         if (response.IsSuccessStatusCode)
                         {
+                            var response3 = response.Content.ReadAsStringAsync().Result;
                             //writing to file
-                            var sdCardPath = Android.OS.Environment.ExternalStorageDirectory.Path;
-                            var filePath = System.IO.Path.Combine(sdCardPath, "results.txt");
-                            using (Stream s = GenerateStreamFromString(response2))
-                            {
-                                System.IO.StreamWriter write = new System.IO.StreamWriter(s);
-                                
-                            }
-                            
-                            
+                            //var sdCardPath = Android.OS.Environment.ExternalStorageDirectory.Path;
+                            //var filePath = System.IO.Path.Combine(sdCardPath, "results.txt");
+                            //using (Stream s = GenerateStreamFromString(response2))
+                            //{
+                            //    System.IO.StreamWriter write = new System.IO.StreamWriter(s);
+
+                            //}
+
+
                             //dimiourgia tou model mou
-                            Emotion emotion = new Emotion();                           
+                            //JObject instaCall = JObject.Parse(responseStr);
+                            //RootObject emotioResult = instaCall["RootObject"].ToObject<RootObject>();
+
+                            //JArray a = JArray.Parse(responseStr);
+
+                            //foreach (JObject o in a.Children<JObject>())
+                            //{
+                            //    foreach (JProperty p in o.Properties())
+                            //    {
+                            //        string name = p.Name;
+                            //        string value = (string)p.Value;
+
+                            //    }
+
+                            //}
+                            //RootObject emotion = new RootObject();                           
                             //MemoryStream stream1 = new MemoryStream();
                             //stream1.Position = 0;
-                            //DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(Emotion));
+                            //DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(RootObject));
 
-                            //var emotionobject = JsonConvert.DeserializeObject<Emotion>(response2);
+                            //var emotionobject = JsonConvert.DeserializeObject<RootObject>(responseStr);
                             //Debug.WriteLine(emotion.scores.happiness);
                             //ser.WriteObject(stream1, emotion);
-                            //Emotion emo = (Emotion)ser.ReadObject(stream1); 
+                            //RootObject emo = (RootObject)ser.ReadObject(stream1); 
                             //Debug.WriteLine(emo.scores.anger);
                             Debug.WriteLine("Image was succesfully uploaded to server!!");
+                            //Debug.WriteLine(response2);
                             //Emotion = await ResponseMessageToEmotionModel(response).ConfigureAwait(false);
                         }
-                        return response2;
+                        return responseStr;
                     }
                     catch (HttpRequestException ex)
                     {

@@ -4,13 +4,7 @@ using System.Text;
 
 namespace EmotionsX.Models
 {
-    public class Emotion
-    {
-        public Facerectangle faceRectangle { get; set; }
-        public Scores scores { get; set; }
-    }
-
-    public class Facerectangle
+    public class FaceRectangle
     {
         public int height { get; set; }
         public int left { get; set; }
@@ -20,14 +14,20 @@ namespace EmotionsX.Models
 
     public class Scores
     {
-        public float anger { get; set; }
-        public float contempt { get; set; }
-        public float disgust { get; set; }
-        public float fear { get; set; }
-        public float happiness { get; set; }
-        public float neutral { get; set; }
-        public float sadness { get; set; }
-        public float surprise { get; set; }
+        public double anger { get; set; }
+        public double contempt { get; set; }
+        public double disgust { get; set; }
+        public double fear { get; set; }
+        public double happiness { get; set; }
+        public double neutral { get; set; }
+        public double sadness { get; set; }
+        public double surprise { get; set; }
+    }
+
+    public class RootObject
+    {
+        public FaceRectangle faceRectangle { get; set; }
+        public Scores scores { get; set; }
     }
 }
 
