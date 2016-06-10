@@ -19,6 +19,7 @@ using Android.Hardware.Camera2.Params;
 using Java.Lang;
 using EmotionsX.Services;
 using System.Threading.Tasks;
+using EmotionsX.Models;
 //using System.IO;
 
 
@@ -603,7 +604,7 @@ namespace EmotionsX.Droid
             }
         }
 
-        public async Task<string> UploadPicHelper()
+        public async Task<RootObject> UploadPicHelper()
         {
             UploadService service = new UploadService();
             var sdCardPath = Android.OS.Environment.ExternalStorageDirectory.Path;
