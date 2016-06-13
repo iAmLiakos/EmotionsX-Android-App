@@ -21,6 +21,5 @@ C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\Emotion
 C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX.Droid\obj\Debug\android\bin\EmotionsX.Droid.apk
 C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX.Droid\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX.Droid\bin\Debug\Newtonsoft.Json.xml
-C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX.Droid\bin\Debug\EmotionsX.dll.mdb
-C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX.Droid\obj\Debug\EmotionsX.Droid.dll.mdb
-C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX.Droid\bin\Debug\EmotionsX.Droid.dll.mdb
+C:\Users\Ilias\Documents\Visual Studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX.Droid\obj\Debug\EmotionsX.Droid.dll.mdb
+C:\Users\Ilias\Documents\Visual Studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX.Droid\bin\Debug\EmotionsX.Droid.dll.mdb

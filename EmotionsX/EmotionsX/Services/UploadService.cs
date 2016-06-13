@@ -24,7 +24,7 @@ namespace EmotionsX.Services
     public class UploadService
     {
         private const string UPLOAD_URL = "http://192.168.0.125:3000/api/upload";
-        private ObservableCollection<Scores> items;
+        
 
         //private const string UPLOAD_URL = "http://10.0.2.2:62363/api/upload";
 
@@ -108,15 +108,33 @@ namespace EmotionsX.Services
                         //var response = await httpClient.PostAsync(UPLOAD_URL, formData);                       
                         //response.Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
 
-                        //no1
-                        //Task<HttpResponseMessage> getResponse = httpClient.PostAsync(UPLOAD_URL, formData);
-                        //HttpResponseMessage response = await getResponse;
+                        //no1                      
                         HttpResponseMessage response = await httpClient.PostAsync(UPLOAD_URL, formData);
-                        var responseStr = await response.Content.ReadAsStringAsync();
-                        var response3 = response.Content.ReadAsStringAsync().Result;
+                        var responseStr = await response.Content.ReadAsStringAsync();                       
                         responseStr = responseStr.Replace(@"\", string.Empty).Trim(new char[] { '\"' });
+                        
+                        //Deserialize
+                        var aaa = JsonConvert.DeserializeObject<List<RootObject>>(responseStr);
+                        
+                        //Handwrited json for testing purposes
+                        //string jsontesting = @"[{'faceRectangle': {
+		                //                                      'height': 100,
+		                //                                      'left': 86,
+		                //                                      'top': 31,
+		                //                                      'width': 100
 
-                        //var response2 = response.Content.ToString();
+                        //                                            },
+	                    //                     'scores': {
+		                //                              'anger': 4.18072176E-07,
+		                //                              'contempt': 3.53371838E-08,
+		                //                              'disgust': 3.424829E-07,
+		                //                              'fear': 0.000125886916,
+		                //                              'happiness': 0.0487938821,
+		                //                              'neutral': 9.02477154E-07,
+		                //                              'sadness': 1.2120166E-09,
+		                //                              'surprise': 0.951078534
+	                    //                                 }
+                        //                    }]";
 
 
                         if (response.IsSuccessStatusCode)
@@ -135,7 +153,13 @@ namespace EmotionsX.Services
                             //dimiourgia tou model mou
                             //dynamic emotionObject = JArray.Parse(responseStr);                           
                             //RootObject emotioResult = emotionObject["scores"].ToObject<RootObject>();
-
+                            //dynamic json = Newtonsoft.Json.JsonConvert.DeserializeObject(jsontesting);
+                            //dynamic test = json[0];                           
+                            //dynamic testing = test.faceRectangle;
+                            //string top = testing.top;
+                            
+                            
+                            
                             //JArray a = JArray.Parse(responseStr);
 
                             //foreach (JObject o in a.Children<JObject>())
@@ -168,7 +192,7 @@ namespace EmotionsX.Services
                             //}
                             //).ToList();
                             //emotion = scores.ToObject<RootObject>();
-                                                                                     
+
                             //MemoryStream stream1 = new MemoryStream();
                             //stream1.Position = 0;
                             //DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(RootObject));
@@ -178,13 +202,13 @@ namespace EmotionsX.Services
 
                             //ser.WriteObject(stream1, emotion);
                             //RootObject emo = (RootObject)ser.ReadObject(stream1); 
-                            //Debug.WriteLine(emo.scores.anger);
+                            //Debug.WriteLine(aaa[0].scores.anger);
                             Debug.WriteLine("Image was succesfully uploaded to server!!");
                             //Debug.WriteLine(response2);
                             //Emotion = await ResponseMessageToEmotionModel(response).ConfigureAwait(false);
-                           // return emotion;
+                            // return emotion;
                         }
-                        
+
                     }
                     catch (HttpRequestException ex)
                     {
