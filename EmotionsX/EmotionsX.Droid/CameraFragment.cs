@@ -79,6 +79,10 @@ namespace EmotionsX.Droid
 
         // CameraDevice.StateListener is called when a CameraDevice changes its state
         private CameraStateListener mStateListener;
+        private bool mFaceDetectSupported;
+        private int mFaceDetectMode;
+        private Face[] faces;
+
         private class CameraStateListener : CameraDevice.StateCallback
         {
             public CameraFragment Fragment;
@@ -90,6 +94,7 @@ namespace EmotionsX.Droid
                     Fragment.mCameraDevice = camera;
                     Fragment.StartPreview();
                     Fragment.mOpeningCamera = false;
+                    ;
                 }
             }
 
@@ -181,23 +186,35 @@ namespace EmotionsX.Droid
         {
             public CameraFragment Fragment;
             public File File;
-            public override async void OnCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result)
+            private void process(CaptureResult result)
+            {
+                Face[] face = (Face[])result.Get(CaptureResult.StatisticsFaces);
+                if (face.Length > 0)
+                {
+                    Log.WriteLine(LogPriority.Info, "faces", "faces detected");
+                }
+            }
+
+            public override void OnCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result)
             {
                 
                 if (Fragment != null && File != null)
                 {
+                    
                     Activity activity = Fragment.Activity;
 
                     if (activity != null)
                     {
                         Toast.MakeText(activity, "Saved: " + File.ToString(), ToastLength.Short).Show();
-                       
+                        
                         Fragment.StartPreview();
                     }
                 }
             }
         }
+        //Testing face detection
 
+        //testing face detection
         // This CameraCaptureSession.StateListener uses Action delegates to allow the methods to be defined inline, as they are defined more than once
         private class CameraCaptureStateListener : CameraCaptureSession.StateCallback
         {
@@ -215,7 +232,9 @@ namespace EmotionsX.Droid
             {
                 if (OnConfiguredAction != null)
                 {
+                    
                     OnConfiguredAction(session);
+                    
                 }
             }
 
@@ -274,7 +293,9 @@ namespace EmotionsX.Droid
 
                 // We set up a CaptureRequest.Builder with the output Surface
                 mPreviewBuilder = mCameraDevice.CreateCaptureRequest(CameraTemplate.Preview);
+                mPreviewBuilder.Set(CaptureRequest.StatisticsFaceDetectMode, mFaceDetectMode);
                 mPreviewBuilder.AddTarget(surface);
+                
 
                 // Here, we create a CameraCaptureSession for camera preview.
                 mCameraDevice.CreateCaptureSession(new List<Surface>() { surface },
@@ -291,11 +312,12 @@ namespace EmotionsX.Droid
                         OnConfiguredAction = (CameraCaptureSession session) =>
                         {
                             mPreviewSession = session;
+                            //onFaceDetection(faces, mCameraDevice);                                  
                             UpdatePreview();
                         }
                     },
                     null);
-
+                
 
             }
             catch (CameraAccessException ex)
@@ -303,6 +325,14 @@ namespace EmotionsX.Droid
                 Log.WriteLine(LogPriority.Info, "Camera2BasicFragment", ex.StackTrace);
             }
         }
+
+        //private void setFaceDetect(CaptureRequest.Builder requestBuilder, int faceDetectMode)
+        //{
+        //    if (mFaceDetectSupported)
+        //    {
+        //        requestBuilder.Set(CaptureRequest.StatisticsFaceDetectMode, faceDetectMode);
+        //    }
+        //}
 
         /// <summary>
         /// Updates the camera preview, StartPreview() needs to be called in advance
@@ -316,14 +346,18 @@ namespace EmotionsX.Droid
 
             try
             {
-                // The camera preview can be run in a background thread. This is a Handler for the camere preview
+                // The camera preview can be run in a background thread. This is a Handler for the camera preview
                 SetUpCaptureRequestBuilder(mPreviewBuilder);
                 HandlerThread thread = new HandlerThread("CameraPreview");
                 thread.Start();
                 Handler backgroundHandler = new Handler(thread.Looper);
 
                 // Finally, we start displaying the camera preview
-                mPreviewSession.SetRepeatingRequest(mPreviewBuilder.Build(), null, backgroundHandler);
+                onFaceDetection(faces, mCameraDevice);
+                mPreviewSession.SetRepeatingRequest(mPreviewBuilder.Build(), null, backgroundHandler);                
+                
+                //testing automatic shutter
+                //TakePicture();
             }
             catch (CameraAccessException ex)
             {
@@ -337,8 +371,9 @@ namespace EmotionsX.Droid
 		/// <param name="builder">Builder.</param>
 		private void SetUpCaptureRequestBuilder(CaptureRequest.Builder builder)
         {
-            // In this sample, w just let the camera device pick the automatic settings
+            //camera device pick the automatic settings and enable facedetect if supported
             builder.Set(CaptureRequest.ControlMode, new Java.Lang.Integer((int)ControlMode.Auto));
+            builder.Set(CaptureRequest.StatisticsFaceDetectMode, 1);
         }
 
         public override void OnCreate(Bundle savedInstanceState)
@@ -404,10 +439,22 @@ namespace EmotionsX.Droid
             try
             {
                 string cameraId = manager.GetCameraIdList()[0];
+                
 
                 // To get a list of available sizes of camera preview, we retrieve an instance of
                 // StreamConfigurationMap from CameraCharacteristics
                 CameraCharacteristics characteristics = manager.GetCameraCharacteristics(cameraId);
+                //facedetection
+                int[] FD = (int[])characteristics.Get(CameraCharacteristics.StatisticsInfoAvailableFaceDetectModes);
+                int maxFD = (int)characteristics.Get(CameraCharacteristics.StatisticsInfoMaxFaceCount);
+
+                if (maxFD > 0)
+                {
+                    mFaceDetectSupported = true;
+                    mFaceDetectMode = FD.Length;
+                }
+                Toast.MakeText(this.Context, maxFD.ToString(), ToastLength.Long).Show();
+
                 StreamConfigurationMap map = (StreamConfigurationMap)characteristics.Get(CameraCharacteristics.ScalerStreamConfigurationMap);
                 mPreviewSize = map.GetOutputSizes(Java.Lang.Class.FromType(typeof(SurfaceTexture)))[0];
                 Android.Content.Res.Orientation orientation = Resources.Configuration.Orientation;
@@ -422,6 +469,9 @@ namespace EmotionsX.Droid
 
                 // We are opening the camera with a listener. When it is ready, OnOpened of mStateListener is called.
                 manager.OpenCamera(cameraId, mStateListener, null);
+               
+                
+
             }
             catch (CameraAccessException ex)
             {
@@ -437,6 +487,7 @@ namespace EmotionsX.Droid
 
         private void TakePicture()
         {
+            
             try
             {
                 Activity activity = Activity;
@@ -558,7 +609,7 @@ namespace EmotionsX.Droid
             switch (v.Id)
             {
                 case Resource.Id.camerafragmentbutton:
-                    //uploading to my api
+                    //just taking a snap
                     TakePicture();
                     break;
                 case Resource.Id.uploadbutton:
@@ -625,5 +676,15 @@ namespace EmotionsX.Droid
                 return null;
             }
         }
-    }
+
+        //Automatic shoot when a face detected
+        public void onFaceDetection(Face[] faces, CameraDevice arg1)
+        {
+            
+            if (arg1 != null && faces!=null)
+            {              
+                TakePicture();             
+            }
+        }
+    };
 }
