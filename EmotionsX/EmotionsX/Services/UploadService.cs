@@ -199,11 +199,11 @@ namespace EmotionsX.Services
                             //var emotionObject = JsonConvert.DeserializeObject<List<RootObject>>(responseStr);
                             //Debug.WriteLine(emotion.scores.happiness);
 
-
+                            
                             //ser.WriteObject(stream1, emotion);
                             //RootObject emo = (RootObject)ser.ReadObject(stream1); 
                             //Debug.WriteLine(aaa[0].scores.anger);
-                            Debug.WriteLine("Image was succesfully uploaded to server!!");
+                            //Debug.WriteLine("Image was succesfully uploaded to server!!");
                             //Debug.WriteLine(response2);
                             //Emotion = await ResponseMessageToEmotionModel(response).ConfigureAwait(false);
                             // return emotion;

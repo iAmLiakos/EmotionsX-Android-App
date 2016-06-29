@@ -20,6 +20,7 @@ using Java.Lang;
 using EmotionsX.Services;
 using System.Threading.Tasks;
 using EmotionsX.Models;
+using System.Timers;
 //using System.IO;
 
 
@@ -82,6 +83,10 @@ namespace EmotionsX.Droid
         private bool mFaceDetectSupported;
         private int mFaceDetectMode;
         private Face[] faces;
+        private int _countSeconds = 20;
+        public CameraCaptureSession.CaptureCallback mCaptureCallBack;
+
+
 
         private class CameraStateListener : CameraDevice.StateCallback
         {
@@ -154,7 +159,7 @@ namespace EmotionsX.Droid
                 }
                 finally
                 {
-                    
+
 
 
                     if (image != null)
@@ -176,44 +181,88 @@ namespace EmotionsX.Droid
                 finally
                 {
                     if (output != null)
-                    output.Close();
+                        output.Close();
                 }
             }
-            
+
         }
 
-        private class CameraCaptureListener : CameraCaptureSession.CaptureCallback
+        //private class CameraCaptureListener : CameraCaptureSession.CaptureCallback
+        //{
+        //    public CameraFragment Fragment;
+        //    public File File;
+        //    public void process(CaptureResult result)
+        //    {
+        //        Face[] face = (Face[])result.Get(CaptureResult.StatisticsFaces);
+        //        if (face.Length > 0)
+        //        {
+
+        //            Log.WriteLine(LogPriority.Info, "faces", "faces detected");
+        //        }
+        //    }
+
+        //    public override void onCaptureProgressed(CameraCaptureSession session, CaptureRequest request, CaptureResult partialResult)
+        //    {
+        //        process(partialResult);
+        //    }
+        //    public override void OnCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result)
+        //    {
+
+        //        if (Fragment != null && File != null)
+        //        {
+
+        //            Activity activity = Fragment.Activity;
+
+        //            if (activity != null)
+        //            {
+        //                Toast.MakeText(activity, "Saved: " + File.ToString(), ToastLength.Short).Show();
+
+        //                Fragment.StartPreview();
+        //            }
+        //        }
+        //    }
+        //}
+        //Testing face detection
+        private class CaptureCallBack : CameraCaptureSession.CaptureCallback
         {
             public CameraFragment Fragment;
             public File File;
-            private void process(CaptureResult result)
+            public void process(CaptureResult result)
             {
-                Face[] face = (Face[])result.Get(CaptureResult.StatisticsFaces);
-                if (face.Length > 0)
+                Face face = (Face)result.Get(CaptureResult.StatisticsFaces);
+                if (face != null)
                 {
                     Log.WriteLine(LogPriority.Info, "faces", "faces detected");
                 }
             }
 
+            public override void OnCaptureProgressed(CameraCaptureSession session, CaptureRequest request, CaptureResult partialResult)
+            {
+                process(partialResult);
+            }
+
             public override void OnCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result)
             {
-                
+                Java.Lang.Object[] face = (Java.Lang.Object[])result.Get(CaptureResult.StatisticsFaces);
                 if (Fragment != null && File != null)
                 {
-                    
+
                     Activity activity = Fragment.Activity;
 
                     if (activity != null)
                     {
-                        Toast.MakeText(activity, "Saved: " + File.ToString(), ToastLength.Short).Show();
-                        
+                        //Toast.MakeText(activity, "Saved: " + File.ToString(), ToastLength.Short).Show();
+                        Toast.MakeText(activity, "Faces Detected: " + face.Length, ToastLength.Short).Show();
+                        if (face != null)
+                        {
+                            Fragment.UploadPicHelper();
+                        }
                         Fragment.StartPreview();
                     }
                 }
             }
-        }
-        //Testing face detection
 
+        }
         //testing face detection
         // This CameraCaptureSession.StateListener uses Action delegates to allow the methods to be defined inline, as they are defined more than once
         private class CameraCaptureStateListener : CameraCaptureSession.StateCallback
@@ -230,11 +279,12 @@ namespace EmotionsX.Droid
             public Action<CameraCaptureSession> OnConfiguredAction;
             public override void OnConfigured(CameraCaptureSession session)
             {
+
                 if (OnConfiguredAction != null)
                 {
-                    
+
                     OnConfiguredAction(session);
-                    
+
                 }
             }
 
@@ -295,7 +345,7 @@ namespace EmotionsX.Droid
                 mPreviewBuilder = mCameraDevice.CreateCaptureRequest(CameraTemplate.Preview);
                 mPreviewBuilder.Set(CaptureRequest.StatisticsFaceDetectMode, mFaceDetectMode);
                 mPreviewBuilder.AddTarget(surface);
-                
+
 
                 // Here, we create a CameraCaptureSession for camera preview.
                 mCameraDevice.CreateCaptureSession(new List<Surface>() { surface },
@@ -312,12 +362,13 @@ namespace EmotionsX.Droid
                         OnConfiguredAction = (CameraCaptureSession session) =>
                         {
                             mPreviewSession = session;
+                            setFaceDetect(mPreviewBuilder, mFaceDetectMode);
                             //onFaceDetection(faces, mCameraDevice);                                  
                             UpdatePreview();
                         }
                     },
                     null);
-                
+
 
             }
             catch (CameraAccessException ex)
@@ -326,13 +377,13 @@ namespace EmotionsX.Droid
             }
         }
 
-        //private void setFaceDetect(CaptureRequest.Builder requestBuilder, int faceDetectMode)
-        //{
-        //    if (mFaceDetectSupported)
-        //    {
-        //        requestBuilder.Set(CaptureRequest.StatisticsFaceDetectMode, faceDetectMode);
-        //    }
-        //}
+        public void setFaceDetect(CaptureRequest.Builder requestBuilder, int faceDetectMode)
+        {
+            if (mFaceDetectSupported)
+            {
+                requestBuilder.Set(CaptureRequest.StatisticsFaceDetectMode, faceDetectMode);
+            }
+        }
 
         /// <summary>
         /// Updates the camera preview, StartPreview() needs to be called in advance
@@ -353,9 +404,13 @@ namespace EmotionsX.Droid
                 Handler backgroundHandler = new Handler(thread.Looper);
 
                 // Finally, we start displaying the camera preview
+                //onFaceDetection(faces, mCameraDevice);
+
+                CaptureCallBack mCaptureCallBack = new CaptureCallBack() { Fragment = this};
                 onFaceDetection(faces, mCameraDevice);
-                mPreviewSession.SetRepeatingRequest(mPreviewBuilder.Build(), null, backgroundHandler);                
-                
+                //TakePicture();
+                mPreviewSession.SetRepeatingRequest(mPreviewBuilder.Build(), null, backgroundHandler);
+
                 //testing automatic shutter
                 //TakePicture();
             }
@@ -439,7 +494,7 @@ namespace EmotionsX.Droid
             try
             {
                 string cameraId = manager.GetCameraIdList()[0];
-                
+
 
                 // To get a list of available sizes of camera preview, we retrieve an instance of
                 // StreamConfigurationMap from CameraCharacteristics
@@ -469,8 +524,8 @@ namespace EmotionsX.Droid
 
                 // We are opening the camera with a listener. When it is ready, OnOpened of mStateListener is called.
                 manager.OpenCamera(cameraId, mStateListener, null);
-               
-                
+
+
 
             }
             catch (CameraAccessException ex)
@@ -487,7 +542,7 @@ namespace EmotionsX.Droid
 
         private void TakePicture()
         {
-            
+
             try
             {
                 Activity activity = Activity;
@@ -581,15 +636,18 @@ namespace EmotionsX.Droid
                 //This listener is called when the capture is completed
                 // Note that the JPEG data is not available in this listener, but in the ImageAvailableListener we created above
                 // Right click on CameraCaptureListener in your IDE and go to its definition
-                CameraCaptureListener captureListener = new CameraCaptureListener() { Fragment = this, File = file };
-                
+                //CameraCaptureListener captureListener = new CameraCaptureListener() { Fragment = this, File = file };
+                CaptureCallBack mCaptureCallBack = new CaptureCallBack() { Fragment = this, File = file };
+
                 mCameraDevice.CreateCaptureSession(outputSurfaces, new CameraCaptureStateListener()
                 {
                     OnConfiguredAction = (CameraCaptureSession session) =>
                     {
                         try
                         {
-                            session.Capture(captureBuilder.Build(), captureListener, backgroundHandler);
+                            //session.Capture(captureBuilder.Build(), captureListener, backgroundHandler);                           
+                            session.Capture(captureBuilder.Build(), mCaptureCallBack, backgroundHandler);
+                            
                         }
                         catch (CameraAccessException ex)
                         {
@@ -609,8 +667,13 @@ namespace EmotionsX.Droid
             switch (v.Id)
             {
                 case Resource.Id.camerafragmentbutton:
-                    //just taking a snap
-                    TakePicture();
+                    //just taking a snap every 1 minute
+                    var timer = new System.Threading.Timer(
+                        e => TakePicture(),
+                        null,
+                        TimeSpan.Zero,
+                        TimeSpan.FromSeconds(15));
+                    
                     break;
                 case Resource.Id.uploadbutton:
                     await UploadPicHelper();
@@ -664,7 +727,7 @@ namespace EmotionsX.Droid
 
             if (System.IO.File.Exists(imageFilePath))
             {
-                var imageFile = new Java.IO.File(imageFilePath);               
+                var imageFile = new Java.IO.File(imageFilePath);
                 Bitmap bitmap = BitmapFactory.DecodeFile(imageFile.AbsolutePath);
                 var result = await service.UploadPic(bitmap);
                 Toast.MakeText(this.Context, "Done!!", ToastLength.Short).Show();
@@ -680,10 +743,10 @@ namespace EmotionsX.Droid
         //Automatic shoot when a face detected
         public void onFaceDetection(Face[] faces, CameraDevice arg1)
         {
-            
-            if (arg1 != null && faces!=null)
-            {              
-                TakePicture();             
+
+            if (arg1 != null && faces != null)
+            {
+                TakePicture();
             }
         }
     };
