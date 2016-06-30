@@ -6,7 +6,8 @@ public class CameraFragment_CameraCaptureStateListener
 	implements
 		mono.android.IGCUserPeer
 {
-	static final String __md_methods;
+/** @hide */
+	public static final String __md_methods;
 	static {
 		__md_methods = 
 			"n_onConfigureFailed:(Landroid/hardware/camera2/CameraCaptureSession;)V:GetOnConfigureFailed_Landroid_hardware_camera2_CameraCaptureSession_Handler\n" +
@@ -39,7 +40,7 @@ public class CameraFragment_CameraCaptureStateListener
 
 	private native void n_onConfigured (android.hardware.camera2.CameraCaptureSession p0);
 
-	java.util.ArrayList refList;
+	private java.util.ArrayList refList;
 	public void monodroidAddReference (java.lang.Object obj)
 	{
 		if (refList == null)

@@ -6,7 +6,7 @@
     <FrameLayout
         class="EmotionsX.Droid.CameraFragment"
         android:layout_width="match_parent"
-        android:layout_height="300px"
+        android:layout_height="309.5dp"
         android:id="@+id/fragmentcontainer" />
     <FrameLayout
         class="EmotionsX.Droid.EmotionsFragment"
@@ -14,5 +14,7 @@
         android:layout_height="match_parent"
         android:id="@+id/fragmentcontainer2"
         android:fadeScrollbars="false"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:minWidth="25px"
+        android:minHeight="25px" />
 </LinearLayout>

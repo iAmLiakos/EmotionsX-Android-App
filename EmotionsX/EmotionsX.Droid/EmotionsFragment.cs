@@ -43,10 +43,10 @@ namespace EmotionsX.Droid
         {
             switch (v.Id)
             {
-                case Resource.Id.startuploadingbutton:
-                    //uploading to my api
-                    Toast.MakeText(this.Context, "Hello", ToastLength.Long).Show();
-                    break;
+                //case Resource.Id.startuploadingbutton:
+                //    //uploading to my api
+                //    Toast.MakeText(this.Context, "Hello", ToastLength.Long).Show();
+                //    break;
                 case Resource.Id.infobutton:
                     //print a message and stoping the service
                     EventHandler<DialogClickEventArgs> nullHandler = null;
@@ -66,7 +66,7 @@ namespace EmotionsX.Droid
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
-            View.FindViewById(Resource.Id.startuploadingbutton).SetOnClickListener(this);
+            //View.FindViewById(Resource.Id.startuploadingbutton).SetOnClickListener(this);
             View.FindViewById(Resource.Id.infobutton).SetOnClickListener(this);
         }
     }

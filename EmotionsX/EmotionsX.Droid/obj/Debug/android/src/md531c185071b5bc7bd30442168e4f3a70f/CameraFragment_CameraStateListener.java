@@ -6,7 +6,8 @@ public class CameraFragment_CameraStateListener
 	implements
 		mono.android.IGCUserPeer
 {
-	static final String __md_methods;
+/** @hide */
+	public static final String __md_methods;
 	static {
 		__md_methods = 
 			"n_onOpened:(Landroid/hardware/camera2/CameraDevice;)V:GetOnOpened_Landroid_hardware_camera2_CameraDevice_Handler\n" +
@@ -48,7 +49,7 @@ public class CameraFragment_CameraStateListener
 
 	private native void n_onError (android.hardware.camera2.CameraDevice p0, int p1);
 
-	java.util.ArrayList refList;
+	private java.util.ArrayList refList;
 	public void monodroidAddReference (java.lang.Object obj)
 	{
 		if (refList == null)

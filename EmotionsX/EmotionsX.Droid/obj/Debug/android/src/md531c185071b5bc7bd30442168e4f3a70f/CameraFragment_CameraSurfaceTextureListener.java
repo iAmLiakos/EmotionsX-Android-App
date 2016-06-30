@@ -7,7 +7,8 @@ public class CameraFragment_CameraSurfaceTextureListener
 		mono.android.IGCUserPeer,
 		android.view.TextureView.SurfaceTextureListener
 {
-	static final String __md_methods;
+/** @hide */
+	public static final String __md_methods;
 	static {
 		__md_methods = 
 			"n_onSurfaceTextureAvailable:(Landroid/graphics/SurfaceTexture;II)V:GetOnSurfaceTextureAvailable_Landroid_graphics_SurfaceTexture_IIHandler:Android.Views.TextureView/ISurfaceTextureListenerInvoker, Mono.Android, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\n" +
@@ -65,7 +66,7 @@ public class CameraFragment_CameraSurfaceTextureListener
 
 	private native void n_onSurfaceTextureUpdated (android.graphics.SurfaceTexture p0);
 
-	java.util.ArrayList refList;
+	private java.util.ArrayList refList;
 	public void monodroidAddReference (java.lang.Object obj)
 	{
 		if (refList == null)

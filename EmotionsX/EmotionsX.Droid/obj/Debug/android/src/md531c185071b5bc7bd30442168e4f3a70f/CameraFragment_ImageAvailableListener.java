@@ -7,7 +7,8 @@ public class CameraFragment_ImageAvailableListener
 		mono.android.IGCUserPeer,
 		android.media.ImageReader.OnImageAvailableListener
 {
-	static final String __md_methods;
+/** @hide */
+	public static final String __md_methods;
 	static {
 		__md_methods = 
 			"n_onImageAvailable:(Landroid/media/ImageReader;)V:GetOnImageAvailable_Landroid_media_ImageReader_Handler:Android.Media.ImageReader/IOnImageAvailableListenerInvoker, Mono.Android, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\n" +
@@ -31,7 +32,7 @@ public class CameraFragment_ImageAvailableListener
 
 	private native void n_onImageAvailable (android.media.ImageReader p0);
 
-	java.util.ArrayList refList;
+	private java.util.ArrayList refList;
 	public void monodroidAddReference (java.lang.Object obj)
 	{
 		if (refList == null)
