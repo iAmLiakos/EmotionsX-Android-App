@@ -229,6 +229,7 @@ namespace EmotionsX.Droid
             public File File;
             public void process(CaptureResult result)
             {
+                
                 Face face = (Face)result.Get(CaptureResult.StatisticsFaces);
                 if (face != null)
                 {
@@ -247,18 +248,19 @@ namespace EmotionsX.Droid
                 //Face face = (Face)result.Get(CaptureResult.StatisticsFaces);
                 if (Fragment != null && File != null)
                 {
-                    
+
                     Activity activity = Fragment.Activity;
 
                     if (activity != null)
                     {
                         //Toast.MakeText(activity, "Saved: " + File.ToString(), ToastLength.Short).Show();
-                        Toast.MakeText(activity, "Faces Detected: " + face.Length, ToastLength.Short).Show();
+
                         if (face.Length != 0)
                         {
+                            //Toast.MakeText(activity, "Faces Detected: " + face.Length, ToastLength.Short).Show();
                             try
                             {
-                                
+
                                 Fragment.UploadPicHelper();
                             }
                             catch (System.Exception e)
@@ -266,9 +268,9 @@ namespace EmotionsX.Droid
 
                                 throw e;
                             }
-                                                       
+
                         }
-                        
+
                         Fragment.StartPreview();
                     }
                 }

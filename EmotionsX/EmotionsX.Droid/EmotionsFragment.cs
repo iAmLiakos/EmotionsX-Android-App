@@ -54,7 +54,7 @@ namespace EmotionsX.Droid
                     if (activity != null)
                     {
                         new AlertDialog.Builder(activity)
-                            .SetMessage("Info Button")
+                            .SetMessage("Diploma")
                             .SetPositiveButton(Android.Resource.String.Ok, nullHandler)
                             .Show();
 

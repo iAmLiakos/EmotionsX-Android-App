@@ -4,7 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="vertical"
-    android:scrollIndicators="left">
+    android:scrollIndicators="left"
+    android:isScrollContainer="true"
+    android:nestedScrollingEnabled="true"
+    android:overScrollMode="always">
     <LinearLayout
         android:orientation="horizontal"
         android:layout_marginTop="10dp"

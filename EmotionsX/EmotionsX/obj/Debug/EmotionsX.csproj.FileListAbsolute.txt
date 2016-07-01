@@ -29,3 +29,15 @@ C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\Emotion
 C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX\bin\Debug\EmotionsX.dll.mdb
 C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX\obj\Debug\EmotionsX.dll.mdb
 C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX\bin\Debug\EmotionsX.dll.mdb
+C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX\obj\Debug\EmotionsX.dll.mdb
+C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX\bin\Debug\EmotionsX.dll.mdb
+C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX\obj\Debug\EmotionsX.dll.mdb
+C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX\bin\Debug\EmotionsX.dll.mdb
+C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX\obj\Debug\EmotionsX.dll.mdb
+C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX\bin\Debug\EmotionsX.dll.mdb
+C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX\obj\Debug\EmotionsX.dll.mdb
+C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX\bin\Debug\EmotionsX.dll.mdb
+C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX\obj\Debug\EmotionsX.dll.mdb
+C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX\bin\Debug\EmotionsX.dll.mdb
+C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX\obj\Debug\EmotionsX.dll.mdb
+C:\Users\Ilias\documents\visual studio 2015\Projects\EmotionsX\EmotionsX\EmotionsX\bin\Debug\EmotionsX.dll.mdb
