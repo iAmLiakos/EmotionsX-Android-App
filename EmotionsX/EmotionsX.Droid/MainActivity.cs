@@ -25,7 +25,7 @@ namespace EmotionsX.Droid
 
 			// Set our view from the "main" layout resource
 			SetContentView (Resource.Layout.Main);
-
+            this.Window.SetFlags(WindowManagerFlags.KeepScreenOn, WindowManagerFlags.KeepScreenOn);
           
             FragmentManager.BeginTransaction().Replace(Resource.Id.fragmentcontainer, CameraFragment.NewInstance()).Commit();
             
