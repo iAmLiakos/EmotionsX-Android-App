@@ -4,14 +4,14 @@
     android:layout_height="match_parent">
     <EmotionsX.Droid.AutoFitTextureView
         android:id="@+id/texture"
-        android:layout_width="240px"
-        android:layout_height="480px"
+        android:layout_width="480px"
+        android:layout_height="640px"
         android:layout_gravity="center" />
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:paddingTop="240dp">
+        android:paddingTop="380dp">
         <Button
             android:id="@+id/camerafragmentbutton"
             android:layout_width="wrap_content"
@@ -19,11 +19,11 @@
             android:layout_gravity="bottom"
             android:text="Start" />
         <Button
-            android:id="@+id/uploadbutton"
+            android:id="@+id/testbutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:text="Upload"
-            android:layout_marginLeft="101dp" />
+            android:text="Test"
+            android:layout_marginLeft="100dp" />
     </RelativeLayout>
 </FrameLayout>

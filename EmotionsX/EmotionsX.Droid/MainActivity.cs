@@ -26,10 +26,20 @@ namespace EmotionsX.Droid
 			// Set our view from the "main" layout resource
 			SetContentView (Resource.Layout.Main);
             this.Window.SetFlags(WindowManagerFlags.KeepScreenOn, WindowManagerFlags.KeepScreenOn);
-          
-            FragmentManager.BeginTransaction().Replace(Resource.Id.fragmentcontainer, CameraFragment.NewInstance()).Commit();
+
+            try
+            {
+                FragmentManager.BeginTransaction().Replace(Resource.Id.fragmentcontainer, EmotionsFragment.NewInstance()).Commit();
+
+            }
+            catch (System.Exception e)
+            {
+                Toast.MakeText(this, "shit happens", ToastLength.Long).Show();
+                throw e;
+            }
+            //FragmentManager.BeginTransaction().Replace(Resource.Id.fragmentcontainer, CameraFragment.NewInstance()).Commit();
             
-            FragmentManager.BeginTransaction().Replace(Resource.Id.fragmentcontainer2, EmotionsFragment.NewInstance()).Commit();
+            //FragmentManager.BeginTransaction().Replace(Resource.Id.fragmentcontainer2, EmotionsFragment.NewInstance()).Commit();
         }
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using Android.App;
+using Android.Content;
 using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.Util;
@@ -23,7 +24,7 @@ namespace EmotionsX.Services
 {
     public class UploadService
     {
-        private const string UPLOAD_URL = "http://192.168.0.125:3000/api/upload";
+        private const string UPLOAD_URL = "http://192.168.0.130:3000/api/upload";
         
 
         //private const string UPLOAD_URL = "http://10.0.2.2:62363/api/upload";
@@ -66,6 +67,7 @@ namespace EmotionsX.Services
                         string content = await response.Content.ReadAsStringAsync();
                         Toast.MakeText(Application.Context, "Success", ToastLength.Long).Show();
                         return content;
+
                     }
                 }
                 catch (Exception e)
@@ -101,6 +103,14 @@ namespace EmotionsX.Services
                     var httpContent = new ByteArrayContent(bitmapData);
                     formData.Add(httpContent, "file", "picture.jpg");
                     httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    
+                    //sto swma tou request eswmatwnw to token kai to locations gia na perasoun ston server
+                    var prefs = Application.Context.GetSharedPreferences("Shared", FileCreationMode.Private);
+                    string bearer = prefs.GetString("Bearer", "");
+                    string location = prefs.GetString("Location", "");
+                    httpClient.DefaultRequestHeaders.Add("Authorization: Bearer", bearer);
+                    httpClient.DefaultRequestHeaders.Add("Location", location);
+
                     //HttpContent content = new StringContent(json);
                     try
                     {
@@ -110,30 +120,30 @@ namespace EmotionsX.Services
 
                         //no1                      
                         HttpResponseMessage response = await httpClient.PostAsync(UPLOAD_URL, formData);
-                        var responseStr = await response.Content.ReadAsStringAsync();                       
+                        var responseStr = await response.Content.ReadAsStringAsync();
                         responseStr = responseStr.Replace(@"\", string.Empty).Trim(new char[] { '\"' });
-                        
+
                         //Deserialize
                         var aaa = JsonConvert.DeserializeObject<List<RootObject>>(responseStr);
-                        
+
                         //Handwrited json for testing purposes
                         //string jsontesting = @"[{'faceRectangle': {
-		                //                                      'height': 100,
-		                //                                      'left': 86,
-		                //                                      'top': 31,
-		                //                                      'width': 100
+                        //                                      'height': 100,
+                        //                                      'left': 86,
+                        //                                      'top': 31,
+                        //                                      'width': 100
 
                         //                                            },
-	                    //                     'scores': {
-		                //                              'anger': 4.18072176E-07,
-		                //                              'contempt': 3.53371838E-08,
-		                //                              'disgust': 3.424829E-07,
-		                //                              'fear': 0.000125886916,
-		                //                              'happiness': 0.0487938821,
-		                //                              'neutral': 9.02477154E-07,
-		                //                              'sadness': 1.2120166E-09,
-		                //                              'surprise': 0.951078534
-	                    //                                 }
+                        //                     'scores': {
+                        //                              'anger': 4.18072176E-07,
+                        //                              'contempt': 3.53371838E-08,
+                        //                              'disgust': 3.424829E-07,
+                        //                              'fear': 0.000125886916,
+                        //                              'happiness': 0.0487938821,
+                        //                              'neutral': 9.02477154E-07,
+                        //                              'sadness': 1.2120166E-09,
+                        //                              'surprise': 0.951078534
+                        //                                 }
                         //                    }]";
 
 
@@ -157,9 +167,9 @@ namespace EmotionsX.Services
                             //dynamic test = json[0];                           
                             //dynamic testing = test.faceRectangle;
                             //string top = testing.top;
-                            
-                            
-                            
+
+
+
                             //JArray a = JArray.Parse(responseStr);
 
                             //foreach (JObject o in a.Children<JObject>())
@@ -199,7 +209,7 @@ namespace EmotionsX.Services
                             //var emotionObject = JsonConvert.DeserializeObject<List<RootObject>>(responseStr);
                             //Debug.WriteLine(emotion.scores.happiness);
 
-                            
+
                             //ser.WriteObject(stream1, emotion);
                             //RootObject emo = (RootObject)ser.ReadObject(stream1); 
                             //Debug.WriteLine(aaa[0].scores.anger);
@@ -223,6 +233,56 @@ namespace EmotionsX.Services
                 }
             }
 
+        }
+
+        //Sunartisi gia to Authorize tou xrhsth
+        public async Task<JsonResponse> Authorize(string username, string password)
+        {
+
+            string tokenaddress = "http://192.168.0.130:3000/Token";
+            //var httpClient = new HttpClient();
+            using (var httpClient = new HttpClient())
+            {
+                //httpClient.DefaultRequestHeaders.Add("Content-Type", "application/x-www-form-urlencoded");
+                //httpClient.BaseAddress.("http://192.168.0.130:3000/Token");
+                httpClient.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
+                string requestBody = "grant_type=password&username=" + username + "&password=" + password;
+                //HttpContent request = (HttpContent)requestBody;
+
+                var jsonString = JsonConvert.SerializeObject(requestBody);
+                var content = new StringContent(requestBody, Encoding.UTF8);
+                var response = await httpClient.PostAsync(tokenaddress, content);
+                //string sss = response.Content.ReadAsStringAsync().ToString();
+                string jsonresponsestring = await response.Content.ReadAsStringAsync();
+
+                JsonResponse jresponse = JsonConvert.DeserializeObject<JsonResponse>(jsonresponsestring);
+
+                return jresponse;
+            }
+            
+        }
+
+        //sunarthsh gia to upload twn username kai location
+        public async Task<string> UploadUserData()
+        {
+            string url = "http://192.168.0.130:3000/api/upload";
+
+            using (var httpClient = new HttpClient())
+            {
+                var prefs = Application.Context.GetSharedPreferences("Shared", FileCreationMode.Private);
+                string username = prefs.GetString("Username", "");
+                string location = prefs.GetString("Location", "");
+
+                string requestbody ="Username:"+username+"Location:"+location;
+                var jsonString = JsonConvert.SerializeObject(requestbody);
+                var content = new StringContent(requestbody, Encoding.UTF8);
+
+                var response = await httpClient.PostAsync(url, content);
+
+                return null;
+            }
+
+            
         }
 
         public Stream GenerateStreamFromString(string s)

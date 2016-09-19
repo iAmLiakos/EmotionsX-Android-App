@@ -455,6 +455,14 @@ namespace EmotionsX.Droid
             ORIENTATIONS.Append((int)SurfaceOrientation.Rotation90, 0);
             ORIENTATIONS.Append((int)SurfaceOrientation.Rotation180, 270);
             ORIENTATIONS.Append((int)SurfaceOrientation.Rotation270, 180);
+            var prefs = Application.Context.GetSharedPreferences("Shared", FileCreationMode.Private);
+            //var prefsEditor = prefs.Edit();
+
+            var bearer = prefs.GetString("Bearer", "");
+            var location = prefs.GetString("Location", "");
+            var expires = prefs.GetString("Expires", "");
+
+            Toast.MakeText(this.Activity, "Your session expires in : "+expires, ToastLength.Long).Show();
         }
 
         public static CameraFragment NewInstance()
@@ -476,7 +484,7 @@ namespace EmotionsX.Droid
             mTextureView.SurfaceTextureListener = mSurfaceTextureListener;
 
             View.FindViewById(Resource.Id.camerafragmentbutton).SetOnClickListener(this);
-            View.FindViewById(Resource.Id.uploadbutton).SetOnClickListener(this);
+            View.FindViewById(Resource.Id.testbutton).SetOnClickListener(this);
 
         }
 
@@ -682,7 +690,7 @@ namespace EmotionsX.Droid
         {
             switch (v.Id)
             {
-                case Resource.Id.camerafragmentbutton:
+                case Resource.Id.camerafragmentbutton:      
                     //just taking a snap every 1 minute
                     var timer = new System.Threading.Timer(
                         e => TakePicture(),
@@ -691,8 +699,8 @@ namespace EmotionsX.Droid
                         TimeSpan.FromSeconds(30));
                     
                     break;
-                case Resource.Id.uploadbutton:
-                    await UploadPicHelper();
+                case Resource.Id.testbutton:
+                    await UploadCredent();
                     //print a message and stoping the service
                     //EventHandler<DialogClickEventArgs> nullHandler = null;
                     //Activity activity = Activity;
@@ -740,12 +748,14 @@ namespace EmotionsX.Droid
             var sdCardPath = Android.OS.Environment.ExternalStorageDirectory.Path;
             var imageSdPath = Activity.GetExternalFilesDir(null).ToString();
             var imageFilePath = System.IO.Path.Combine(imageSdPath, "pic.jpg");
+            
 
             if (System.IO.File.Exists(imageFilePath))
             {
                 var imageFile = new Java.IO.File(imageFilePath);
                 Bitmap bitmap = BitmapFactory.DecodeFile(imageFile.AbsolutePath);
                 var result = await service.UploadPic(bitmap);
+                //var result2 = await service.UploadUserData();
                 Toast.MakeText(this.Context, "Done!!", ToastLength.Short).Show();
                 return result;
             }
@@ -756,6 +766,14 @@ namespace EmotionsX.Droid
             }
         }
 
+        public async Task<string> UploadCredent()
+        {
+            UploadService service = new UploadService();
+            var result = await service.UploadUserData();
+
+            Toast.MakeText(this.Context, "Done!!", ToastLength.Short).Show();
+            return null;
+        }
         //Automatic shoot when a face detected
         public void onFaceDetection(Face[] faces, CameraDevice arg1)
         {

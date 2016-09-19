@@ -60,6 +60,9 @@ namespace EmotionsX.Droid
 		public partial class Id
 		{
 			
+			// aapt resource value: 0x7f050022
+			public const int button1 = 2131034146;
+			
 			// aapt resource value: 0x7f050001
 			public const int camerafragmentbutton = 2131034113;
 			
@@ -81,6 +84,15 @@ namespace EmotionsX.Droid
 			// aapt resource value: 0x7f050008
 			public const int disgustText = 2131034120;
 			
+			// aapt resource value: 0x7f05001d
+			public const int editText1 = 2131034141;
+			
+			// aapt resource value: 0x7f05001f
+			public const int editText2 = 2131034143;
+			
+			// aapt resource value: 0x7f050021
+			public const int editText3 = 2131034145;
+			
 			// aapt resource value: 0x7f05000a
 			public const int fear = 2131034122;
 			
@@ -90,11 +102,8 @@ namespace EmotionsX.Droid
 			// aapt resource value: 0x7f05000b
 			public const int fearText = 2131034123;
 			
-			// aapt resource value: 0x7f050019
-			public const int fragmentcontainer = 2131034137;
-			
-			// aapt resource value: 0x7f05001a
-			public const int fragmentcontainer2 = 2131034138;
+			// aapt resource value: 0x7f050023
+			public const int fragmentcontainer = 2131034147;
 			
 			// aapt resource value: 0x7f05000d
 			public const int happiness = 2131034125;
@@ -126,6 +135,12 @@ namespace EmotionsX.Droid
 			// aapt resource value: 0x7f050014
 			public const int sadnessText = 2131034132;
 			
+			// aapt resource value: 0x7f050019
+			public const int space2 = 2131034137;
+			
+			// aapt resource value: 0x7f05001b
+			public const int space3 = 2131034139;
+			
 			// aapt resource value: 0x7f050016
 			public const int surprise = 2131034134;
 			
@@ -135,11 +150,23 @@ namespace EmotionsX.Droid
 			// aapt resource value: 0x7f050017
 			public const int surpriseText = 2131034135;
 			
+			// aapt resource value: 0x7f050002
+			public const int testbutton = 2131034114;
+			
+			// aapt resource value: 0x7f05001c
+			public const int textView1 = 2131034140;
+			
+			// aapt resource value: 0x7f05001e
+			public const int textView2 = 2131034142;
+			
+			// aapt resource value: 0x7f050020
+			public const int textView3 = 2131034144;
+			
+			// aapt resource value: 0x7f05001a
+			public const int textView4 = 2131034138;
+			
 			// aapt resource value: 0x7f050000
 			public const int texture = 2131034112;
-			
-			// aapt resource value: 0x7f050002
-			public const int uploadbutton = 2131034114;
 			
 			static Id()
 			{
@@ -161,7 +188,10 @@ namespace EmotionsX.Droid
 			public const int emotionpage = 2130903041;
 			
 			// aapt resource value: 0x7f030002
-			public const int Main = 2130903042;
+			public const int Login = 2130903042;
+			
+			// aapt resource value: 0x7f030003
+			public const int Main = 2130903043;
 			
 			static Layout()
 			{

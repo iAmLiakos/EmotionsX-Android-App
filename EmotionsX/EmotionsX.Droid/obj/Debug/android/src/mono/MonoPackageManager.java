@@ -108,6 +108,7 @@ class MonoPackageManager_Resources {
 		"System.Collections.dll",
 		"Newtonsoft.Json.dll",
 		"System.ServiceModel.Internals.dll",
+		"System.Text.Encoding.dll",
 		"System.Threading.dll",
 		"System.Collections.Concurrent.dll",
 		"System.Reflection.dll",

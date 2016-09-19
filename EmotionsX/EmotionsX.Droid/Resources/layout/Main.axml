@@ -4,17 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
     <FrameLayout
-        class="EmotionsX.Droid.CameraFragment"
-        android:layout_width="match_parent"
-        android:layout_height="309.5dp"
-        android:id="@+id/fragmentcontainer" />
-    <FrameLayout
-        class="EmotionsX.Droid.EmotionsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fragmentcontainer2"
-        android:fadeScrollbars="false"
-        android:scrollbars="vertical"
-        android:minWidth="25px"
-        android:minHeight="25px" />
+        android:id="@+id/fragmentcontainer"/>
 </LinearLayout>
