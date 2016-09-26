@@ -24,7 +24,7 @@ namespace EmotionsX.Services
 {
     public class UploadService
     {
-        private const string UPLOAD_URL = "http://192.168.0.130:3000/api/upload";
+        private const string UPLOAD_URL = "http://192.168.0.123:3000/api/upload";
         
 
         //private const string UPLOAD_URL = "http://10.0.2.2:62363/api/upload";
@@ -108,8 +108,12 @@ namespace EmotionsX.Services
                     var prefs = Application.Context.GetSharedPreferences("Shared", FileCreationMode.Private);
                     string bearer = prefs.GetString("Bearer", "");
                     string location = prefs.GetString("Location", "");
-                    httpClient.DefaultRequestHeaders.Add("Authorization: Bearer", bearer);
+                    //httpClient.DefaultRequestHeaders.Add("Accept", "*/*");
+           
                     httpClient.DefaultRequestHeaders.Add("Location", location);
+                    httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer "+bearer);
+                    //httpClient.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
+                    
 
                     //HttpContent content = new StringContent(json);
                     try
@@ -239,12 +243,12 @@ namespace EmotionsX.Services
         public async Task<JsonResponse> Authorize(string username, string password)
         {
 
-            string tokenaddress = "http://192.168.0.130:3000/Token";
+            string tokenaddress = "http://192.168.0.123:3000/Token";
             //var httpClient = new HttpClient();
             using (var httpClient = new HttpClient())
             {
                 //httpClient.DefaultRequestHeaders.Add("Content-Type", "application/x-www-form-urlencoded");
-                //httpClient.BaseAddress.("http://192.168.0.130:3000/Token");
+                //httpClient.BaseAddress.("http://192.168.0.123:3000/Token");
                 httpClient.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
                 string requestBody = "grant_type=password&username=" + username + "&password=" + password;
                 //HttpContent request = (HttpContent)requestBody;
@@ -265,7 +269,7 @@ namespace EmotionsX.Services
         //sunarthsh gia to upload twn username kai location
         public async Task<string> UploadUserData()
         {
-            string url = "http://192.168.0.130:3000/api/upload";
+            string url = "http://192.168.0.123:3000/api/upload";
 
             using (var httpClient = new HttpClient())
             {

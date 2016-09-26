@@ -260,7 +260,6 @@ namespace EmotionsX.Droid
                             //Toast.MakeText(activity, "Faces Detected: " + face.Length, ToastLength.Short).Show();
                             try
                             {
-
                                 Fragment.UploadPicHelper();
                             }
                             catch (System.Exception e)
@@ -582,12 +581,12 @@ namespace EmotionsX.Droid
                 {
                     jpegSizes = ((StreamConfigurationMap)characteristics.Get(CameraCharacteristics.ScalerStreamConfigurationMap)).GetOutputSizes((int)ImageFormatType.Jpeg);
                 }
-                int width = 640;
-                int height = 480;
+                int width = 1920;
+                int height = 1080;
                 if (jpegSizes != null && jpegSizes.Length > 0)
                 {
-                    width = jpegSizes[0].Width;
-                    height = jpegSizes[0].Height;
+                    width = jpegSizes[2].Width;
+                    height = jpegSizes[2].Height;
                 }
 
                 // We use an ImageReader to get a JPEG from CameraDevice
@@ -686,7 +685,7 @@ namespace EmotionsX.Droid
             }
         }
         
-        public async void OnClick(View v)
+        public void OnClick(View v)
         {
             switch (v.Id)
             {
@@ -700,7 +699,7 @@ namespace EmotionsX.Droid
                     
                     break;
                 case Resource.Id.testbutton:
-                    await UploadCredent();
+                    TakePicture();
                     //print a message and stoping the service
                     //EventHandler<DialogClickEventArgs> nullHandler = null;
                     //Activity activity = Activity;
@@ -766,13 +765,26 @@ namespace EmotionsX.Droid
             }
         }
 
-        public async Task<string> UploadCredent()
+        public async Task<string> UploadOne()
         {
             UploadService service = new UploadService();
-            var result = await service.UploadUserData();
+            var sdCardPath = Android.OS.Environment.ExternalStorageDirectory.Path;
+            var imageSdPath = Activity.GetExternalFilesDir(null).ToString();
+            var imageFilePath = System.IO.Path.Combine(imageSdPath, "pic.jpg");
 
-            Toast.MakeText(this.Context, "Done!!", ToastLength.Short).Show();
+
+            if (System.IO.File.Exists(imageFilePath))
+            {
+                var imageFile = new Java.IO.File(imageFilePath);
+                Bitmap bitmap = BitmapFactory.DecodeFile(imageFile.AbsolutePath);
+                var result = await service.UploadPic(bitmap);
+               
+                Toast.MakeText(this.Context, "Done!!", ToastLength.Short).Show();
+                return null;
+            }
+            Toast.MakeText(this.Context, "No last image found", ToastLength.Short).Show();
             return null;
+
         }
         //Automatic shoot when a face detected
         public void onFaceDetection(Face[] faces, CameraDevice arg1)
